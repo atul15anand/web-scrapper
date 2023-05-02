@@ -1,12 +1,10 @@
-// // In content.js
-
   function getMessage(request, sender, sendResponse) {
     if (request.action === "getLinks") {
       sendResponse({ links: getArticleLinks() });
     } else if (request.action === "getContent" ) {
       sendResponse({ content: getArticleContent() });
     } else if(request.action === "createTabAndFetch") {
-      sendResponse({content: createTabAndFetch(request.urls)});
+      sendResponse({ content: createTabAndFetch(request.urls)});
     }
   }
 

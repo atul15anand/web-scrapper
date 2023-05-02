@@ -4,11 +4,11 @@ function getMessage(request, sender, sendResponse) {
     } else if (request.action === "getContent" ) {
       sendResponse({ content: getArticleContent() });
     } else if(request.action === "generateNewTabs") {
-      sendResponse({content: "we were inside bg"});
+      sendResponse({content: createTabAndFetch(request.urls)});
     }
 }
 
-async function createTabAndFetch(urls) {
+  async function createTabAndFetch(urls) {
     const promises = urls.map(url => {
       return new Promise((resolve, reject) => {
         chrome.tabs.create({ url, active: false }, function (tab) {
@@ -16,7 +16,6 @@ async function createTabAndFetch(urls) {
         });
       });
     });
-  
     const contents = await Promise.all(promises);
     return contents;
   }
