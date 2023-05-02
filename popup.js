@@ -19,31 +19,28 @@ window.onload = function () {
   });
 
   // const fetchNextFiveButton = document.getElementById("fetchNextFiveButton");
-  // fetchNextFiveButton.addEventListener("click", function () {
-  //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  //     const [tab] = tabs;
+  // fetchNextFiveButton.addEventListener("click", async function () {
+  //   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  //   const tab = tabs[0];
+  //   const response = await new Promise(resolve => {
   //     chrome.tabs.sendMessage(tab.id, { action: "createTabAndFetch", urls: articleLinksData }, function (response) {
-  //       if (response && response.content) {
-  //         console.log(response.content);
-  //       }
+  //       resolve(response);
   //     });
   //   });
+  //   if (response && response.content) {
+  //     console.log(response.content);
+  //   }
   // });
-
-  const fetchNextFiveButton = document.getElementById("fetchNextFiveButton");
-  fetchNextFiveButton.addEventListener("click", async function () {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    const tab = tabs[0];
-    const response = await new Promise(resolve => {
-      chrome.tabs.sendMessage(tab.id, { action: "createTabAndFetch", urls: articleLinksData }, function (response) {
-        resolve(response);
+  document.getElementById("fetchNextFiveButton").addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "getLinks" }, function (response) {
+      const links = articleLinksData.slice(5, 10); // Get the next 5 links
+  
+      chrome.runtime.sendMessage({ action: "generateNewTabs", urls: links }, function (response) {
+        console.log(response);
       });
     });
-    if (response && response.content) {
-      console.log(response.content);
-    }
-  });
-  
+  });  
+
 
   const fetchContentButton = document.getElementById("fetchContentButton");
   fetchContentButton.addEventListener("click", function () {

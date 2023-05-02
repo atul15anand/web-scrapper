@@ -4,7 +4,14 @@
     } else if (request.action === "getContent" ) {
       sendResponse({ content: getArticleContent() });
     } else if(request.action === "createTabAndFetch") {
-      sendResponse({ content: createTabAndFetch(request.urls)});
+      chrome.runtime.sendMessage({ action: "generateNewTabs", urls: request.urls }, function(response) {
+        if (response && response.content) {
+          sendResponse({ content: response.content });
+        } else {
+          sendResponse({});
+        }
+      });
+      return true; // indicates that the response will be sent asynchronously
     }
   }
 
@@ -20,7 +27,6 @@
       return response.content;
     }
   }
-  
   
   function getArticleContent() {
     const content1 = document.getElementsByClassName("content")[0];
