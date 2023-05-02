@@ -1,0 +1,53 @@
+<!-- In popup.html -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Link Grabber</title>
+    <script src="scripts/readability.js"></script>
+    <style>
+      body {
+        width: 300px;
+        height: 300px;
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      a {
+        color: #337ab7;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <h1>Links on this page:</h1>
+    <ul id="linkList"></ul>
+    <h1>Article Scraper</h1>
+    <p>Click the button below to fetch article links.</p>
+    <button id="fetchUrlsButton">Fetch Article Links</button>
+
+    <p>Click the button below to fetch current article content.</p>
+    <button id="fetchContentButton">Fetch Current Article Content</button>
+
+    <p>Click the button below to fetch content from all urls stored.</p>
+    <button id="fetchNextFiveButton">Get Article Content From Next 5 Urls</button>
+
+    <p>Click the button below to clear the stored data.</p>
+    <button id="clearButton">Clear Data</button>
+
+    <p>Print links </p>
+    <button id="printLinks"> Print Links</button>
+    <p><span id="message"></span></p>
+    <script src="./popup.js"></script>
+
+  </body>
+</html>

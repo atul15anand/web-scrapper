@@ -1,0 +1,66 @@
+:root {
+    --turqoise: #00C4B5;
+    --black: #282A2C;
+    --dark-grey: #707274;
+  }
+body{
+    padding: 0;
+    margin: 0;
+    width: max-content;
+    font-size: 0px;
+}
+.popup_container{
+    padding: 16px;
+    width: 500px;
+}
+
+.flex-default{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alma_button{
+    background-color: var(--turqoise);
+    padding: 8px;
+    color: white;
+    width: max-content;
+    border-radius: 4px;
+    font-size: 8px;
+}
+
+.alma_button:hover{
+    cursor: pointer;
+}
+
+.text_caption{ 
+    font-size: 8px;
+    color: var(--dark-grey);
+}
+
+.text_caption_bold{
+    font-weight: 700;
+    font-size: 8px;
+    color: var(--black);
+}
+
+.logo_image_animator{
+    animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation{
+    20%{
+        transform: rotate(30deg);
+    }
+    80%{
+        transform: rotate(330deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
