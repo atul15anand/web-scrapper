@@ -33,8 +33,10 @@ window.onload = function () {
   // });
   document.getElementById("fetchNextFiveButton").addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "getLinks" }, function (response) {
-      const links = articleLinksData.slice(5, 10); // Get the next 5 links
-  
+      // const links = articleLinksData.slice(5, 10); // Get the next 5 links
+      const links = articleLinksData.map((element) => {
+        return element[1];
+      });
       chrome.runtime.sendMessage({ action: "generateNewTabs", urls: links }, function (response) {
         console.log(response);
       });
@@ -42,42 +44,42 @@ window.onload = function () {
   });  
 
 
-  const fetchContentButton = document.getElementById("fetchContentButton");
-  fetchContentButton.addEventListener("click", function () {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const [tab] = tabs;
-      chrome.tabs.sendMessage(tab.id, { action: "getContent" }, function (response) {
-        console.log(response);
-        if (response && response.content) {
-          const data = {
-            api_key: "345311",
-            content: response.content,
-          };
-          fetch("http://0.0.0.0:3002/matching_articles/fetch_sharable_article_data", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const message = data.message;
-              const messageEl = document.getElementById("message");
-              messageEl.textContent = `Message: ${message}`;
-              chrome.tabs.remove(tab.id, function() {
-                console.log('Tab closed');
-              });
-            })
-            .catch((error) => {
-              const message = data.message;
-              const messageEl = document.getElementById("message");
-              messageEl.textContent = `Message: ${message}`;
-            });
-        }
-      });
-    });
-  });
+  // const fetchContentButton = document.getElementById("fetchContentButton");
+  // fetchContentButton.addEventListener("click", function () {
+  //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  //     const [tab] = tabs;
+  //     chrome.tabs.sendMessage(tab.id, { action: "getContent" }, function (response) {
+  //       console.log(response);
+  //       if (response && response.content) {
+  //         const data = {
+  //           api_key: "345311",
+  //           content: response.content,
+  //         };
+  //         fetch("http://0.0.0.0:3002/matching_articles/fetch_sharable_article_data", {
+  //           method: "POST",
+  //           body: JSON.stringify(data),
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //         })
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             const message = data.message;
+  //             const messageEl = document.getElementById("message");
+  //             messageEl.textContent = `Message: ${message}`;
+  //             chrome.tabs.remove(tab.id, function() {
+  //               console.log('Tab closed');
+  //             });
+  //           })
+  //           .catch((error) => {
+  //             const message = data.message;
+  //             const messageEl = document.getElementById("message");
+  //             messageEl.textContent = `Message: ${message}`;
+  //           });
+  //       }
+  //     });
+  //   });
+  // });
 
   const clearButton = document.getElementById("clearButton");
   clearButton.addEventListener("click", function () {
@@ -86,44 +88,39 @@ window.onload = function () {
     localStorage.removeItem("articlesContentData");
   });
 
-  const printLinks = document.getElementById("printLinks")
-  printLinks.addEventListener("click", function () {
-    console.log(articleLinksData);
-  });
-
   // Get content on window load
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const [tab] = tabs;
-    chrome.tabs.sendMessage(tab.id, { action: "getContent" }, function (response) {
-      if (tab.url.includes("/news/2023")) {
-        if (response && response.content) {
-          const data = {
-            api_key: "345311",
-            content: response.content,
-          };
-          fetch("http://0.0.0.0:3002/matching_articles/fetch_sharable_article_data", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const message = data.message;
-              const messageEl = document.getElementById("message");
-              messageEl.textContent = `Message: ${message}`;
-              chrome.tabs.remove(tab.id, function() {
-                console.log('Tab closed');
-              });
-            })
-            .catch((error) => {
-              const message = data.message;
-              const messageEl = document.getElementById("message");
-              messageEl.textContent = `Message: ${message}`;
-            });
-        }
-      }
-    });
-  });
-};
+//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//     const [tab] = tabs;
+//     chrome.tabs.sendMessage(tab.id, { action: "getContent" }, function (response) {
+//       if (tab.url.includes("/news/2023")) {
+//         if (response && response.content) {
+//           const data = {
+//             api_key: "345311",
+//             content: response.content,
+//           };
+//           fetch("http://0.0.0.0:3002/matching_articles/fetch_sharable_article_data", {
+//             method: "POST",
+//             body: JSON.stringify(data),
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//           })
+//             .then((response) => response.json())
+//             .then((data) => {
+//               const message = data.message;
+//               const messageEl = document.getElementById("message");
+//               messageEl.textContent = `Message: ${message}`;
+//               chrome.tabs.remove(tab.id, function() {
+//                 console.log('Tab closed');
+//               });
+//             })
+//             .catch((error) => {
+//               const message = data.message;
+//               const messageEl = document.getElementById("message");
+//               messageEl.textContent = `Message: ${message}`;
+//             });
+//         }
+//       }
+//     });
+//   });
+ };
