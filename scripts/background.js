@@ -1,13 +1,12 @@
 function getMessage(request, sender, sendResponse) {
   if (request.action === "generateNewTabs") {
     createTabs(request.urls);
-  } else if (request.action === "send message"){
+  } else if (request.action === "fetchContentFromUrls"){
     let data = request.data;
-    
     
     fetch("http://0.0.0.0:3002/matching_articles/fetch_sharable_article_data", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(data), 
       headers: {
         "Content-Type": "application/json",
       },
@@ -34,7 +33,6 @@ function getParameterByName(name, url) {
 }
 
 let urlsToOpen = [];
-let tabsOpened = 0;
 
 async function createTabs(urls) {
   urlsToOpen = urls.filter(url => url.includes("/news/2023"));

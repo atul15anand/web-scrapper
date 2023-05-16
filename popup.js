@@ -18,7 +18,7 @@ window.onload = function () {
     });
   });
 
-  document.getElementById("fetchNextFiveButton").addEventListener("click", function () {
+  document.getElementById("fetchContentButton").addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "getLinks" }, function (response) {
       // const links = articleLinksData.slice(5, 10); // Get the next 5 links
       const links = articleLinksData.map((element) => {

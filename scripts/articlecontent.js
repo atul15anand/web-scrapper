@@ -1,28 +1,4 @@
-function getMessage(request, sender, sendResponse) {
-    if(request.action === "createTabAndFetch") {
-      chrome.runtime.sendMessage({ action: "generateNewTabs", urls: request.urls }, function(response) {
-        if (response && response.content) {
-          sendResponse({ content: response.content });
-        }
-      });
-      return true;
-    }
-  }
-
-  async function createTabAndFetch(urls) {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    const tab = tabs[0];
-    const response = await new Promise(resolve => {
-      chrome.tabs.sendMessage(tab.id, { action: "generateNewTabs", urls: urls }, function (response) {
-        resolve(response);
-      });
-    });
-    if (response && response.content) {
-      return response.content;
-    }
-  }
-  
-  window.onload = function() {
+window.onload = function() {
     const content1 = document.getElementsByClassName("content")[0];
     const content2 = document.getElementsByClassName("content")[2];
     const headline = document.querySelector(".detail__headline");
@@ -32,7 +8,6 @@ function getMessage(request, sender, sendResponse) {
     const contentText1 = content1 ? content1.innerText : "";
     const contentText2 = content2 ? content2.innerText : "";
     const headlineText = headline ? headline.innerText : "";
-    const dateText = date ? date.innerText : "";
 
     const article_content = contentText1 + contentText2;
 
@@ -68,8 +43,5 @@ function getMessage(request, sender, sendResponse) {
       api_key: "345311",
       content: content,
     };
-    chrome.runtime.sendMessage({action: "send message", data: data});
-  };
-  
-  chrome.runtime.onMessage.addListener(getMessage);
-  
+    chrome.runtime.sendMessage({action: "fetchContentFromUrls", data: data});
+};
