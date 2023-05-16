@@ -1,13 +1,10 @@
 function getMessage(request, sender, sendResponse) {
   if (request.action === "generateNewTabs") {
     createTabs(request.urls);
-  } else if(request.action === "response with true was received"){
-    console.log("true was sent from background.js to content");
-  } 
-  else if (request.action === "send message"){
+  } else if (request.action === "send message"){
     let data = request.data;
-    console.log(data);
-
+    
+    
     fetch("http://0.0.0.0:3002/matching_articles/fetch_sharable_article_data", {
       method: "POST",
       body: JSON.stringify(data),
@@ -17,26 +14,46 @@ function getMessage(request, sender, sendResponse) {
     })
       .then((response) => {
         console.log(response);
-        if (response.ok) {
-          console.log("ok");
-          chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.tabs.remove(tabs[0].id);
-          });
-        }
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          const tab = tabs[0];
+          const flagToClose = getParameterByName("flagToClose", tab.url);
+          if (flagToClose === "true" && response.ok) {
+            chrome.tabs.remove(tab.id);
+          }
+        });
       })
       .catch((error) => {
-        console.error('There was a problem with the fetch operation:', error);
+        console.log("error occured");
       });
   }
 }
 
-async function createTabs(urls) {
-  for (const url of urls) {
-    if(url.includes("/news/2023") && !url.includes("subscriber-only")){
-      chrome.tabs.create({ url: url });
-    }
-  }
+function getParameterByName(name, url) {
+  const searchParams = new URLSearchParams(new URL(url).search);
+  return searchParams.get(name);
 }
 
+let urlsToOpen = [];
+let tabsOpened = 0;
+
+async function createTabs(urls) {
+  urlsToOpen = urls.filter(url => url.includes("/news/2023"));
+  openNextTab();
+}
+
+function openNextTab() {
+  if (urlsToOpen.length > 0) {
+    const url = urlsToOpen.shift();
+    const modifiedUrl = url + "?flagToClose=true";
+    chrome.tabs.create({url: modifiedUrl}, function(tab) {
+      chrome.tabs.onUpdated.addListener(function listener(tabId, changeInfo, updatedTab) {
+        if (tabId === tab.id && changeInfo.status === "complete" && updatedTab.status === "complete") {
+          chrome.tabs.onUpdated.removeListener(listener);
+          setTimeout(openNextTab, 1000);
+        }
+      });
+    });
+  }
+}
 chrome.runtime.onMessage.addListener(getMessage);
 
